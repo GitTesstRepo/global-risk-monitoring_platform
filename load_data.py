@@ -18,9 +18,8 @@ load_dotenv()
 
 BUCKET_NAME = os.getenv('BUCKET_NAME')
 
-CREDENTIALS_FILE = "gcs.json"
+CREDENTIALS_FILE = os.getenv('CREDENTIALS_FILE_NAME')
 client = storage.Client.from_service_account_json(CREDENTIALS_FILE)
-
 
 CHUNK_SIZE = 8 * 1024 * 1024
 
@@ -88,10 +87,10 @@ def upload_to_gcs(file_path, date, max_retries=3):
 
     for attempt in range(max_retries):
         try:
-            print(f"Uploading&unzipping {file_path} to {BUCKET_NAME} (Attempt {attempt + 1})...")
+            print(f"Uploading & unzipping {file_path} to {BUCKET_NAME} (Attempt {attempt + 1})...")
             blob.upload_from_string(z.read(z.namelist()[0]))
 
-            print(f"Uploaded: gs://{BUCKET_NAME}/{date}/{blob_name}")
+            print(f"Uploaded: gs://{BUCKET_NAME}/{blob_name}")
 
             if verify_gcs_upload(blob_name):
                 print(f"Verification successful for {blob_name}")
