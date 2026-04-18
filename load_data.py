@@ -10,11 +10,13 @@ import requests
 import zipfile
 import io
 from itertools import repeat
+from dotenv import load_dotenv
 
+date = "20260406"
 
-# Change this to your bucket name
-BUCKET_NAME = "project_20260415"
+load_dotenv()
 
+BUCKET_NAME = os.getenv('BUCKET_NAME')
 
 CREDENTIALS_FILE = "gcs.json"
 client = storage.Client.from_service_account_json(CREDENTIALS_FILE)
@@ -23,8 +25,6 @@ client = storage.Client.from_service_account_json(CREDENTIALS_FILE)
 CHUNK_SIZE = 8 * 1024 * 1024
 
 bucket = client.bucket(BUCKET_NAME)
-
-date = "20260409"
 
 def get_upload_list(date):
 
