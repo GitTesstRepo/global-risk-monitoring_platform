@@ -46,5 +46,5 @@ variable "bq_external_table_name" {
 
 variable "bq_raw_table_name" {
   description = "Raw Table Name"
-  default     = "raw_gdelt_events"
+  default     = "raw_gdelt_events_partitioned"
 }
