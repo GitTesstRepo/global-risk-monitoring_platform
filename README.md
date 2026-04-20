@@ -136,6 +136,30 @@ Using Python 3.13 ensures stable dependency resolution and reproducible environm
 - `load_data.py`: ingestion script (GDELT masterfile → download exports → upload to GCS).
 - `requirements.txt`: A file that lists the Python dependencies required to run the ingestion and transformation scripts.
 
+### Run dbt transformations
+
+Follow [`dbt_transformation/README.md`](dbt_transformation/README.md) to create your `profiles.yml`, then run:
+
+```bash
+cd dbt_transformation
+dbt run
+dbt test
+```
+
+## Running ingestion locally (without Kestra)
+
+Install dependencies:
+
+```bash
+python -m pip install -r requirements.txt
+```
+
+Run ingestion:
+
+```bash
+python load_data.py --date 20260401
+```
+
 ## End-to-end Steps (high level)
 
 1. Clone repository
@@ -204,3 +228,5 @@ The project implements a modular batch data platform on Google Cloud:
             │ Looker Studio        │
             │ Analytical Dashboard │
             └──────────────────────┘
+
+This modular architecture ensures that the pipeline is flexible, scalable, and can handle the large volume of global news events efficiently, providing actionable insights into global geopolitical risk.
