@@ -97,12 +97,16 @@ dbt ensures versioned, testable, and maintainable transformations across the pip
 
 ## Dashboard (Looker Studio)
 
-The final analytical layer is implemented in Looker Studio and contains three main visualizations:
+The final analytical layer of the project is implemented in Looker Studio and is publicly accessible:
+
+https://datastudio.google.com/reporting/05eb33e6-53bd-4c5e-b039-9c73c2012026
+
+The dashboard provides an interactive interface for exploring geopolitical risk patterns derived from the GDELT dataset and consists of three analytical views:
 
 ### 1. Global Risk Index by Country
 A categorical view of geopolitical risk distribution across countries based on aggregated event activity and sentiment.
 
-### 2. Global Sentiment Trend (7-day rolling average)
+### 2. Global Sentiment Trend (7d Rolling Avg)
 A time-series visualization showing the evolution of global sentiment over time with smoothing applied to reduce noise.
 
 ### 3. Emerging Geopolitical Hotspots (7d Growth vs Previous 7d)
@@ -115,6 +119,13 @@ The dashboard enables exploratory analysis of global geopolitical patterns throu
 ## Reproducibility
 
 The entire project is fully reproducible and can be run from scratch.
+
+## Environment Setup
+
+The project is developed and tested using Python 3.13.
+Python 3.14 was intentionally not used due to compatibility issues with dbt and related dependencies (dbt-bigquery, dbt-core adapters).  This issue is documented in the official dbt repository discussion:
+https://github.com/dbt-labs/dbt-core/issues/12098
+Using Python 3.13 ensures stable dependency resolution and reproducible environment setup across all pipeline components.
 
 ### Steps:
 
@@ -148,14 +159,14 @@ All components are containerized or script-based, ensuring consistent execution 
 The project implements a modular batch data platform on Google Cloud:
 
             ┌──────────────────────┐
-            │      GDELT API       │
+            │        GDELT         │
             │ (Global Event Feed)  │
             └──────────┬───────────┘
                        │
                        ▼
             ┌──────────────────────┐
-            │ Python Ingestion     │
-            │(Kestra Orchestration)│
+            │        Kestra        │
+            │(Batch Orchestration) │
             └──────────┬───────────┘
                        │
                        ▼
