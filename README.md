@@ -186,11 +186,17 @@ From repo root:
 docker compose up -d
 ```
 
-1. Open Kestra UI at: `http://localhost:8080`
-2. Import all flows:
+1. **Open Kestra UI** at: `http://localhost:8080`
+
+2. **Edit configuration flow gcp_kv.yaml**:
+
+Replace the placeholder values (e.g., # TODO replace with your project id) with actual values from your GCP setup. This file should be executed firstly to fill KV Store Values
+
+3. **Import all flows**:
 - Navigate to Flows section in the Kestra UI.
 - Click Import and select all the YAML files from the kestra_flows directory to import them into Kestra.
-3. Run flows:
+
+4. **Run flows**:
 - After importing, select the flows from the list and trigger them manually or let them run as per their scheduled configurations.
 
 This will ensure that all ingestion and orchestration tasks are ready for execution in Kestra.
@@ -221,7 +227,13 @@ python -m venv .venv
 python -m pip install -r requirements.txt
 ```
 
-4. Run the ingestion process:
+4. Copy `.env.example` to `.env` and fill in:
+
+- `BUCKET_NAME`
+- `PROJECT_ID`, 
+- `CREDENTIALS_FILE_NAME` (if you keep it in root folder it should be set up as gcp.json)
+
+5. Run the ingestion process:
 
 ```bash
 python load_data.py --date 20260401
