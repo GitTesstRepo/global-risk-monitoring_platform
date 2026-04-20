@@ -147,18 +147,16 @@ Using Python 3.13 ensures stable dependency resolution and reproducible environm
 
 ### 2) Create GCP service JSON key
 
-1. Create a service account in Google Cloud Console.
+1. **Create a service account** in Google Cloud Console.
    - You can assign it the **Owner** role, but if you prefer to be more specific, the service account will need permissions for **Google Cloud Storage** and **BigQuery**.
 
 2. Download the service account's **JSON key**.
 
-3. Rename the JSON file to `gcp.json` and move it to the root directory of the project.
+3. **Rename the JSON file** to `gcp.json` and move it to the root directory of the project.
 
 This key will be used for authentication when interacting with Google Cloud resources in your pipeline.
 
 ### 3) Provision cloud resources (Terraform)
-
-Run Terraform from `terraform/` directory:
 
 1. **Configure Terraform variables**:
    - Open the file `terraform/variables.tf`.
@@ -174,13 +172,13 @@ Run Terraform from `terraform/` directory:
    terraform apply
    ```
 
-terraform init: Initializes the Terraform working directory and downloads required provider plugins.
-terraform plan: Generates an execution plan, showing which resources will be created or modified.
-terraform apply: Applies the execution plan and provisions the resources on Google Cloud.
+- terraform init: Initializes the Terraform working directory and downloads required provider plugins.
+- terraform plan: Generates an execution plan, showing which resources will be created or modified.
+- terraform apply: Applies the execution plan and provisions the resources on Google Cloud.
 
 This will create the necessary infrastructure, including Google Cloud Storage (data lake) and BigQuery (data warehouse) resources.
 
-### 3) Start Kestra locally
+### 4) Start Kestra locally
 
 From repo root:
 
@@ -197,7 +195,7 @@ docker compose up -d
 
 This will ensure that all ingestion and orchestration tasks are ready for execution in Kestra.
 
-### 4) Run dbt transformations
+### 5) Run dbt transformations
 
 Follow [`dbt_transformation/README.md`](dbt_transformation/README.md) to create your `profiles.yml`, then run:
 
