@@ -7,4 +7,4 @@ sources:
     schema: "{{ target.dataset }}" # BigQuery Dataset Name
     tables:
       - name: external_gdelt_events_csv
-        description: ""
+        description: "Accumulated raw data of events"
