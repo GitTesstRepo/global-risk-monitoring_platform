@@ -11,12 +11,18 @@ import zipfile
 import io
 from itertools import repeat
 from dotenv import load_dotenv
+import argparse
 
-date = "20260406"
-
+# Load environment variables
 load_dotenv()
 
 BUCKET_NAME = os.getenv('BUCKET_NAME')
+
+# Argument parsing
+def parse_arguments():
+    parser = argparse.ArgumentParser(description="Download and upload files from GDELT.")
+    parser.add_argument('--date', type=str, required=True, help='The date in YYYYMMDD format.')
+    return parser.parse_args()
 
 CREDENTIALS_FILE = os.getenv('CREDENTIALS_FILE_NAME')
 client = storage.Client.from_service_account_json(CREDENTIALS_FILE)
@@ -106,8 +112,10 @@ def upload_to_gcs(file_path, date, max_retries=3):
 
 
 if __name__ == "__main__":
+    args = parse_arguments()  # Parse the arguments
+    date = args.date  # Set the date from the command-line argument
 
     with ThreadPoolExecutor(max_workers=4) as executor:
         executor.map(upload_to_gcs, filter(None, get_upload_list(date)), repeat(date))  # Remove None values
 
-    print("All files processed and verified.") 
+    print("All files processed and verified.")
