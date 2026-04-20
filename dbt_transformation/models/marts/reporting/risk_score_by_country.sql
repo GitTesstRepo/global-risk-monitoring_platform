@@ -1,5 +1,5 @@
 SELECT
-    t1.event_date AS date,
+    t1.event_date AS event_date,
     t1.short_form_name AS country_name,
     t1.action_geo_country_code AS country_code,
     COUNT(*) AS event_count,
