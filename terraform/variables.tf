@@ -7,7 +7,7 @@ variable "credentials" {
 
 variable "project" {
   description = "Project"
-  default     = "terra-77564"
+  default     = "replace-with-your-project-name"
 }
 
 variable "region" {
@@ -25,13 +25,13 @@ variable "location" {
 variable "bq_dataset_name" {
   description = "My BigQuery Daataset Name"
   #Update the below to what you want your dataset to be called
-  default = "example_dataset"
+  default = "replace-with-your-dataset"
 }
 
 variable "gcs_bucket_name" {
   description = "My Storage Bucket Name"
   #Update the below to a unique bucket name
-  default = "terra-77564-data-lake"
+  default = "replace-with-your-bucket-name"
 }
 
 variable "gcs_storage_class" {
