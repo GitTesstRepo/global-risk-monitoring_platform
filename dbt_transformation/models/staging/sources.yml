@@ -3,8 +3,8 @@ version: 2
 sources:
   - name: raw_data
     description: "Raw data sources for the project"
-    database: terra-77564 # BigQuery Project ID
-    schema: project_20260415 # BigQuery Dataset Name
+    database: "{{ target.project }}" # BigQuery Project ID
+    schema: "{{ target.dataset }}" # BigQuery Dataset Name
     tables:
       - name: external_gdelt_events_csv
         description: ""
