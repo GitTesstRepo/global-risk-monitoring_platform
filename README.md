@@ -53,7 +53,7 @@ The pipeline is implemented as a batch workflow orchestrated using Kestra and ru
 1. Python script retrieves GDELT master file based on execution date
 2. Relevant compressed event files are downloaded and extracted
 3. Raw files are stored in Google Cloud Storage (data lake), partitioned by date (YYYYMMDD)
-4. BigQuery external table reads data directly from GCS
+4. BigQuery external table reads data directly from GCS (external table provisioned by Terraform)
 5. Data is loaded into partitioned and clustered BigQuery tables for downstream processing
 
 This setup ensures a fully automated and reproducible end-to-end batch ingestion pipeline.
@@ -99,7 +99,7 @@ dbt ensures versioned, testable, and maintainable transformations across the pip
 
 The final analytical layer of the project is implemented in Looker Studio and is publicly accessible:
 
-https://datastudio.google.com/reporting/05eb33e6-53bd-4c5e-b039-9c73c2012026
+- Dashboard: `https://datastudio.google.com/reporting/05eb33e6-53bd-4c5e-b039-9c73c2012026`
 
 The dashboard provides an interactive interface for exploring geopolitical risk patterns derived from the GDELT dataset and consists of three analytical views:
 
@@ -124,10 +124,19 @@ The entire project is fully reproducible and can be run from scratch.
 
 The project is developed and tested using Python 3.13.
 Python 3.14 was intentionally not used due to compatibility issues with dbt and related dependencies (dbt-bigquery, dbt-core adapters).  This issue is documented in the official dbt repository discussion:
-https://github.com/dbt-labs/dbt-core/issues/12098
+`https://github.com/dbt-labs/dbt-core/issues/12098`
 Using Python 3.13 ensures stable dependency resolution and reproducible environment setup across all pipeline components.
 
-### Steps:
+## Repository layout
+
+- `dbt_transformation/`: dbt project (BigQuery staging + marts).
+- `kestra_flows/`: Kestra flows. The GDELT ingestion flow is `gdelt_ingestion.yaml`.
+- `terraform/`: GCP resources (GCS + BigQuery).
+- `docker-compose.yaml`: operates Kestra locally.
+- `load_data.py`: ingestion script (GDELT masterfile → download exports → upload to GCS).
+- `requirements.txt`: A file that lists the Python dependencies required to run the ingestion and transformation scripts.
+
+## End-to-end Steps (high level)
 
 1. Clone repository
 2. Configure GCP credentials (service account JSON)
