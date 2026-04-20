@@ -136,7 +136,68 @@ Using Python 3.13 ensures stable dependency resolution and reproducible environm
 - `load_data.py`: ingestion script (GDELT masterfile → download exports → upload to GCS).
 - `requirements.txt`: A file that lists the Python dependencies required to run the ingestion and transformation scripts.
 
-### Run dbt transformations
+## Quickstart (Windows / PowerShell)
+
+### 1) Clone the repository
+
+   ```bash
+   git clone https://github.com/GitTesstRepo/global-risk-monitoring_platform
+   cd global-risk-monitoring_platform
+   ```
+
+### 2) Create GCP service JSON key
+
+1. Create a service account in Google Cloud Console.
+   - You can assign it the **Owner** role, but if you prefer to be more specific, the service account will need permissions for **Google Cloud Storage** and **BigQuery**.
+
+2. Download the service account's **JSON key**.
+
+3. Rename the JSON file to `gcp.json` and move it to the root directory of the project.
+
+This key will be used for authentication when interacting with Google Cloud resources in your pipeline.
+
+### 3) Provision cloud resources (Terraform)
+
+Run Terraform from `terraform/` directory:
+
+1. **Configure Terraform variables**:
+   - Open the file `terraform/variables.tf`.
+   - Fill in the necessary values for the variables (e.g., GCP project ID, bucket name, etc.).
+
+2. **Run Terraform**:
+
+   From the `terraform/` directory, run the following commands to provision the resources:
+
+   ```bash
+   terraform init
+   terraform plan
+   terraform apply
+   ```
+
+terraform init: Initializes the Terraform working directory and downloads required provider plugins.
+terraform plan: Generates an execution plan, showing which resources will be created or modified.
+terraform apply: Applies the execution plan and provisions the resources on Google Cloud.
+
+This will create the necessary infrastructure, including Google Cloud Storage (data lake) and BigQuery (data warehouse) resources.
+
+### 3) Start Kestra locally
+
+From repo root:
+
+```bash
+docker compose up -d
+```
+
+1. Open Kestra UI at: `http://localhost:8080`
+2. Import all flows:
+- Navigate to Flows section in the Kestra UI.
+- Click Import and select all the YAML files from the kestra_flows directory to import them into Kestra.
+3. Run flows:
+- After importing, select the flows from the list and trigger them manually or let them run as per their scheduled configurations.
+
+This will ensure that all ingestion and orchestration tasks are ready for execution in Kestra.
+
+### 4) Run dbt transformations
 
 Follow [`dbt_transformation/README.md`](dbt_transformation/README.md) to create your `profiles.yml`, then run:
 
@@ -148,17 +209,27 @@ dbt test
 
 ## Running ingestion locally (without Kestra)
 
-Install dependencies:
+1. Create a virtual environment (recommended for dependency isolation):
+
+```bash
+python -m venv .venv
+```
+
+2. Activate the virtual environment:
+
+3. Install dependencies:
 
 ```bash
 python -m pip install -r requirements.txt
 ```
 
-Run ingestion:
+4. Run the ingestion process:
 
 ```bash
 python load_data.py --date 20260401
 ```
+
+This ensures that the environment is isolated, preventing conflicts with other Python packages and ensuring consistent dependency management across different setups.
 
 ## End-to-end Steps (high level)
 
@@ -179,11 +250,11 @@ All components are containerized or script-based, ensuring consistent execution 
 - Google Cloud Platform (GCS, BigQuery)
 - Terraform (Infrastructure as Code)
 - Kestra (Workflow orchestration)
+- Docker / Docker Compose
 - dbt (Data transformations)
 - Python (data ingestion)
 - SQL (data modeling)
 - Looker Studio (dashboarding)
-- Docker / Docker Compose
 
 ---
 
