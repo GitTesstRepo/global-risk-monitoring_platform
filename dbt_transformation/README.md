@@ -34,7 +34,7 @@ dbt_transformation:
 
 Notes:
 - `project` must match your GCP project.
-- `dataset` must match the dataset created by Terraform (see `/terraform/variables.tf`).
+- `dataset` must match the dataset created by Terraform (see [`/terraform/variables.tf`](../terraform/variables.tf)).
 - Models reference the source table `external_gdelt_events_csv` in that dataset.
 
 ### 2) Run dbt
