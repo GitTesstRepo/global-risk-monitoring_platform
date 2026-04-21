@@ -186,7 +186,7 @@ From repo root:
 docker compose up -d
 ```
 
-1. **Open Kestra UI** at: `http://localhost:8080`
+1. **Open Kestra UI** at: `http://localhost:8080` (credentials can be found in docker-compose.yaml file)
 
 2. **Edit configuration flow gcp_kv.yaml**:
 
