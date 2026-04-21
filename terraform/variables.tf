@@ -23,7 +23,7 @@ variable "location" {
 }
 
 variable "bq_dataset_name" {
-  description = "My BigQuery Daataset Name"
+  description = "My BigQuery Dataset Name"
   #Update the below to what you want your dataset to be called
   default = "replace-with-your-dataset"
 }
