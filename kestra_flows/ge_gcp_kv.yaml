@@ -25,3 +25,15 @@ tasks:
     key: GCP_DATASET
     kvType: STRING
     value: your-dataset-name # TODO Replace with your dataset name
+  
+  - id: gcp_external_table
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_TABLE_EXTERNAL
+    kvType: STRING
+    value: your-ext-table-name # TODO Replace with your external table name
+
+  - id: gcp_partitioned_table
+    type: io.kestra.plugin.core.kv.Set
+    key: GCP_TABLE_PARTITIONED
+    kvType: STRING
+    value: your-partitioned-table-name # TODO Replace with your partitioned table name

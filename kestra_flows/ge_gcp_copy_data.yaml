@@ -1,0 +1,36 @@
+id: ge_gcp_copy_data
+namespace: gdelt_events
+description: |
+  Flow for processing data from external table to partitioned table in BigQuery.
+
+variables:
+  source_table: "{{ kv('GCP_DATASET') }}.{{ kv('GCP_TABLE_EXTERNAL') }}"
+  destination_table: "{{ kv('GCP_DATASET') }}.{{kv('GCP_TABLE_PARTITIONED') }}"
+
+tasks:
+  - id: copy_data
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+      MERGE `{{ kv('GCP_PROJECT_ID') }}.{{ render(vars.destination_table) }}` T
+      USING `{{ kv('GCP_PROJECT_ID') }}.{{ render(vars.source_table) }}` S
+      ON T.globaleventid = S.globaleventid
+
+      WHEN NOT MATCHED THEN
+        INSERT ROW;
+
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: If you'd like to explore Kestra outputs, disable it.
+    disabled: false
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      projectId: "{{kv('GCP_PROJECT_ID')}}"
+      location: "{{kv('GCP_LOCATION')}}"
+      bucket: "{{kv('GCP_BUCKET_NAME')}}"
+
+triggers:
+  - id: hourly_schedule
+    type: io.kestra.plugin.core.trigger.Schedule
+    cron: "0 * * * *"   # Upload every hour
