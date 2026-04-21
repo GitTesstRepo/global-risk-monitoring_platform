@@ -13,6 +13,8 @@ from itertools import repeat
 from dotenv import load_dotenv
 import argparse
 
+# run: python .\load_data.py --date=20260419
+
 # Load environment variables
 load_dotenv()
 
