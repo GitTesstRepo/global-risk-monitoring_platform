@@ -61,4 +61,4 @@ SELECT
     DATEADDED AS date_added,
     SOURCEURL AS source_url
 
-FROM {{ source("raw_data", "external_gdelt_events_csv") }}
+FROM {{ source("raw_data", "raw_gdelt_events_partitioned") }}

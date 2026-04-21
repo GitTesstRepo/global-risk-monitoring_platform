@@ -6,5 +6,5 @@ sources:
     database: "{{ target.project }}" # BigQuery Project ID
     schema: "{{ target.dataset }}" # BigQuery Dataset Name
     tables:
-      - name: external_gdelt_events_csv
+      - name: raw_gdelt_events_partitioned
         description: "Accumulated raw data of events"
