@@ -10,7 +10,9 @@ The goal is to enable monitoring and analysis of global geopolitical dynamics by
 - global sentiment trends over time
 - emerging hotspots based on recent activity changes
 
-Raw event data is highly noisy, unstructured, and too large for direct analysis. This pipeline solves this by ingesting, transforming, and modeling the data into an optimized analytical format suitable for dashboards and decision-making.
+The GDELT dataset is extremely large and continuously growing, with new event data published every 15 minutes and historical archives reaching terabytes in size. Raw event data is highly noisy, unstructured, and too large for direct analysis. 
+
+This pipeline is designed to efficiently ingest, store, and process large volumes of data using cloud storage, partitioning, and incremental batch processing. It transforms raw events into a structured analytical format suitable for dashboards and decision-making.
 
 ---
 
