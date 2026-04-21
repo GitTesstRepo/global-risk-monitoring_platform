@@ -53,4 +53,13 @@ The source config uses dbt target values (no hardcoded project/dataset):
 - `database: {{ target.project }}`
 - `schema: {{ target.dataset }}`
 
+The source table name must match the partitioned table created during the ingestion step.
+
+Make sure that:
+- the ingestion step has been completed
+- the table exists in BigQuery
+- the dataset name matches the one defined in your `profiles.yml`
+
+Otherwise, dbt models will fail due to missing sources.
+
 See [`models/staging/sources.yml`](models/staging/sources.yml).
