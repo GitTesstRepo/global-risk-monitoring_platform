@@ -48,17 +48,30 @@ Terraform is used to ensure that all infrastructure can be fully recreated in a 
 
 ## Data Ingestion (Batch Pipeline + Orchestration)
 
-The pipeline is implemented as a batch workflow orchestrated using Kestra and runs on an hourly schedule.
+The pipeline is implemented as a batch workflow orchestrated using Kestra. In this repository there are Kestra flows for:
+- setting GCP parameters via KV
+- copying data from the BigQuery external table into the partitioned table (hourly schedule)
 
 ### Pipeline flow:
 
-1. Python script retrieves GDELT master file based on execution date
+1. Python `load_data.py` retrieves GDELT master file based on execution date
 2. Relevant compressed event files are downloaded and extracted
-3. Raw files are stored in Google Cloud Storage (data lake), partitioned by date (YYYYMMDD)
-4. BigQuery external table reads data directly from GCS (external table provisioned by Terraform)
-5. Data is loaded into partitioned and clustered BigQuery tables for downstream processing
+3. Raw files are stored in Google Cloud Storage (data lake) under a date prefix (e.g. `YYYYMMDD/<filename>`)
+4. BigQuery external table reads raw data directly from GCS (external table provisioned by Terraform)
+5. Kestra flow `ge_gcp_copy_data.yaml` merges data from the external table into the partitioned table (`raw_gdelt_events_partitioned`)
+6. dbt transformations build staging + marts on top of the partitioned table
 
 This setup ensures a fully automated and reproducible end-to-end batch ingestion pipeline.
+
+### Important: GCS path alignment with the external table
+
+`load_data.py` uploads files under a date prefix (`YYYYMMDD/`), while the Terraform external table is configured to read from the bucket root using a pattern like:
+
+`gs://<bucket>/2026*.export.CSV`
+
+With the current setup, the external table will not see files uploaded under `YYYYMMDD/` unless you either:
+- change ingestion to write objects to the bucket root (or a prefix included by the external table), or
+- change Terraform `source_uris` to include the date prefix.
 
 ---
 
@@ -132,11 +145,13 @@ Using Python 3.13 ensures stable dependency resolution and reproducible environm
 ## Repository layout
 
 - `dbt_transformation/`: dbt project (BigQuery staging + marts).
-- `kestra_flows/`: Kestra flows. The GDELT ingestion flow is `gdelt_ingestion.yaml`.
+- `kestra_flows/`:
+  - `ge_gcp_kv.yaml`: sets GCP config values in Kestra KV
+  - `ge_gcp_copy_data.yaml`: merges external table → partitioned table in BigQuery (hourly trigger)
 - `terraform/`: GCP resources (GCS + BigQuery).
-- `docker-compose.yaml`: operates Kestra locally.
+- `docker-compose.yaml`: runs Kestra locally.
 - `load_data.py`: ingestion script (GDELT masterfile → download exports → upload to GCS).
-- `requirements.txt`: A file that lists the Python dependencies required to run the ingestion and transformation scripts.
+- `requirements.txt`: Python dependencies required to run the ingestion script.
 
 ## Quickstart (Windows / PowerShell)
 
@@ -190,7 +205,7 @@ docker compose up -d
 
 1. **Open Kestra UI** at: `http://localhost:8080` (credentials can be found in docker-compose.yaml file)
 
-2. **Edit configuration flow gcp_kv.yaml**:
+2. **Edit configuration flow ge_gcp_kv.yaml**:
 
 Replace the placeholder values (e.g., # TODO replace with your project id) with actual values from your GCP setup. This file should be executed firstly to fill KV Store Values
 
@@ -232,8 +247,8 @@ python -m pip install -r requirements.txt
 4. Copy `.env.example` to `.env` and fill in:
 
 - `BUCKET_NAME`
-- `PROJECT_ID`, 
-- `CREDENTIALS_FILE_NAME` (if you keep it in root folder it should be set up as gcp.json)
+- `PROJECT_ID` 
+- `CREDENTIALS_FILE_NAME` (path to your service account key file; if it is in repo root, use `gcp.json`)
 
 5. Run the ingestion process:
 
@@ -249,9 +264,10 @@ This ensures that the environment is isolated, preventing conflicts with other P
 2. Configure GCP credentials (service account JSON)
 3. Deploy infrastructure using Terraform
 4. Start orchestration layer (Kestra via Docker Compose)
-5. Run batch ingestion pipeline
-6. Execute dbt transformations
-7. Launch Looker Studio dashboard
+5. Run ingestion (`load_data.py`)
+6. Run Kestra `ge_gcp_copy_data.yaml` (MERGE external → partitioned)
+7. Execute dbt transformations
+8. Launch Looker Studio dashboard
 
 All components are containerized or script-based, ensuring consistent execution across environments.
 
