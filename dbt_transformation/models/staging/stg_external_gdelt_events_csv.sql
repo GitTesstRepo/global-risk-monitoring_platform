@@ -1,6 +1,6 @@
 SELECT
     GLOBALEVENTID AS global_event_id,
-    PARSE_DATE('%Y%m%d', CAST(SQLDATE AS STRING)) AS event_date,
+    SQLDATE AS event_date,
     MonthYear AS event_month_year,
     Year AS event_year,
     FractionDate AS fraction_date,
