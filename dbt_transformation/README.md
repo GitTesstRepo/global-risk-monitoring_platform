@@ -1,6 +1,6 @@
 ## dbt transformations (BigQuery)
 
-This folder contains the dbt project that transforms the raw GDELT events (external table in BigQuery) into staging + marts models used for reporting (risk score, sentiment trend, emerging hotspots).
+This folder contains the dbt project that transforms the raw GDELT events (partitioned table in BigQuery) into staging + marts models used for reporting (risk score, sentiment trend, emerging hotspots).
 
 ### Prerequisites
 
@@ -35,7 +35,7 @@ dbt_transformation:
 Notes:
 - `project` must match your GCP project.
 - `dataset` must match the dataset created by Terraform (see [`/terraform/variables.tf`](../terraform/variables.tf)).
-- Models reference the source table `external_gdelt_events_csv` in that dataset.
+- Models reference the source table `raw_gdelt_events_partitioned` in that dataset.
 
 ### 2) Run dbt
 
@@ -54,6 +54,7 @@ The source config uses dbt target values (no hardcoded project/dataset):
 - `schema: {{ target.dataset }}`
 
 The source table name must match the partitioned table created during the ingestion step.
+In this repository, the partitioned table is populated by Kestra flow [`/kestra_flows/ge_gcp_copy_data.yaml`](../kestra_flows/ge_gcp_copy_data.yaml) (MERGE external → partitioned).
 
 Make sure that:
 - the ingestion step has been completed
