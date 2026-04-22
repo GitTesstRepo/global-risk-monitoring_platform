@@ -58,7 +58,7 @@ The pipeline is implemented as a batch workflow orchestrated using Kestra. In th
 2. Relevant compressed event files are downloaded and extracted
 3. Raw files are stored in Google Cloud Storage (data lake) under a date prefix (e.g. `YYYYMMDD/<filename>`)
 4. BigQuery external table reads raw data directly from GCS (external table provisioned by Terraform)
-5. Kestra flow `ge_gcp_copy_data.yaml` merges data from the external table into the partitioned table (`raw_gdelt_events_partitioned`)
+5. Kestra flow `ge_gcp_copy_data.yaml` merges data from the external table into the partitioned and clustered BigQuery table (`raw_gdelt_events_partitioned`)
 6. dbt transformations build staging + marts on top of the partitioned table
 
 This setup ensures a fully automated and reproducible end-to-end batch ingestion pipeline.
@@ -236,7 +236,7 @@ dbt test
 python -m venv .venv
 ```
 
-2. Activate the virtual environment:
+2. Activate the virtual environment
 
 3. Install dependencies:
 
