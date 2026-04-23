@@ -290,42 +290,14 @@ All components are containerized or script-based, ensuring consistent execution 
 
 The project implements a modular batch data platform on Google Cloud:
 
-            ┌──────────────────────┐
-            │        GDELT         │
-            │ (Global Event Feed)  │
-            └──────────┬───────────┘
-                       │
-                       ▼
-            ┌──────────────────────┐
-            │        Kestra        │
-            │(Batch Orchestration) │
-            └──────────┬───────────┘
-                       │
-                       ▼
-            ┌──────────────────────┐
-            │ Google Cloud Storage │
-            │ (Data Lake - Raw)    │
-            └──────────┬───────────┘
-                       │
-                       ▼
-            ┌──────────────────────┐
-            │ BigQuery Warehouse   │
-            │ - External Tables    │
-            │ - Partitioned Tables │
-            │ - Clustered Tables   │
-            └──────────┬───────────┘
-                       │
-                       ▼
-            ┌──────────────────────┐
-            │ dbt Transformations  │
-            │ staging → marts      │
-            │ metrics layer        │
-            └──────────┬───────────┘
-                       │
-                       ▼
-            ┌──────────────────────┐
-            │ Looker Studio        │
-            │ Analytical Dashboard │
-            └──────────────────────┘
+```mermaid
+flowchart LR
+
+A["GDELT<br>(Global Event Feed)"] --> B["Kestra<br>(Batch Orchestration)"]
+B --> C["Google Cloud Storage<br>(Data Lake - Raw)"]
+C --> D[BigQuery Warehouse<br>- External Tables<br>- Partitioned Tables<br>- Clustered Tables ]
+D --> E["dbt Transformations<br>staging → marts <br> metrics layer"]
+E --> F[Looker Studio<br>Analytical Dashboard]
+```            
 
 This modular architecture ensures that the pipeline is flexible, scalable, and can handle the large volume of global news events efficiently, providing actionable insights into global geopolitical risk.
